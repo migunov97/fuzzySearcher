@@ -1,14 +1,17 @@
+#ifndef FUZZY_SEARCHER_CONCURRENT
+#define FUZZY_SEARCHER_CONCURRENT
+
 #include <functional>
 #include <vector>
 #include <string>
 #include <thread>
-namespace{
+namespace FuzzySearcher{
     struct TaskRange
     {
-        size_t begin_;
-        size_t end_;
+        size_t begin;
+        size_t end;
 
-        TaskRange(size_t begin = 0, size_t end = 0): begin_(begin), end_(end) {}
+        TaskRange(size_t begin = 0, size_t end = 0): begin(begin), end(end) {}
     };
 };
 class Concurrent
@@ -23,3 +26,5 @@ class Concurrent
 
     size_t thread_count;    
 };
+
+#endif

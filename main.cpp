@@ -1,11 +1,11 @@
 
 #include <iostream>
 
-#include "textforsearching.h"
+#include "text_for_searching.h"
 
 std::ifstream& getfile(const std::string &preliminary_file_name)
 {
-    
+
 }
 
 int main(char argc, char **argv)
