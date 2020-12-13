@@ -4,6 +4,7 @@
 #include <list>
 #include <vector>
 
+#include "fuzzy_searcher.h"
 using Text = std::vector<std::vector<std::string>>;
 
 class TextForSearching
@@ -12,8 +13,11 @@ class TextForSearching
     TextForSearching(std::ifstream& file);
 
     std::list<std::string> FuzzySearch(std::string &sample);
+
   private:
-    Text m_strings_by_length_;    
+    bool ThereAreStringsWithLength(size_t length);
+
+    Text strings_with_length;    
 };
 
 
