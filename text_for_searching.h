@@ -10,11 +10,12 @@ using Text = std::vector<std::vector<std::string>>;
 class TextForSearching
 {
   public:
-    TextForSearching(std::ifstream& file);
+    TextForSearching(std::ifstream &file);
 
     std::list<std::string> FuzzySearch(std::string &sample);
 
   private:
+    void Add(const std::string &line);
     bool ThereAreStringsWithLength(size_t length);
 
     Text strings_with_length;    
