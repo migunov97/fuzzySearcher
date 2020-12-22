@@ -1,7 +1,11 @@
-#include "text_for_searching.h"
+
 
 #include <fstream>
+
 #include "concurrent.h"
+#include "text_for_searching.h"
+
+using namespace fuzzySearcher;
 TextForSearching::TextForSearching(std::ifstream &file)
 {
     std::string line;
@@ -14,27 +18,53 @@ TextForSearching::TextForSearching(std::ifstream &file)
 
 void TextForSearching::Add(const std::string &str)
 {
-    if (strings_with_length.size() < str.size())
-        strings_with_length.reserve(str.size());
+    if (m_strings_with_length_.size() < str.size())
+        m_strings_with_length_.reserve(str.size());
 
-    strings_with_length[str.size()].emplace_back(str);
+    m_strings_with_length_[str.size()].emplace_back(str);
     return;    
 }
 
-bool TextForSearching::ThereAreStringsWithLength(size_t length)
-{
-    if (length <= strings_with_length.size())
-        return !strings_with_length[length].empty();
-    else 
-        return false;    
-}
+
 
 std::list<std::string> TextForSearching::FuzzySearch(std::string &sample)
 {
     FuzzySearcher searcher(sample);
     Concurrent concurrent;
     size_t length = sample.size();
-    if (ThereAreStringsWithLength(sample.size()))
-        concurrent.Mapped(strings_with_length[length - 1])
 
+    if (ThereAreStringsWithLength(length - 1))
+        concurrent.Mapped(m_strings_with_length_[length - 1],
+            [&concurrent, &searcher, &sample](const std::string &str)
+            {
+                searcher.SaveIfFitWithMissing(str);
+            }
+        ); 
+    
+    if (ThereAreStringsWithLength(length))
+        concurrent.Mapped(m_strings_with_length_[length],
+            [&concurrent, &searcher, &sample](const std::string &str)
+            {
+                searcher.SaveIfFitWithChanging(str);
+            }
+        ); 
+ 
+    if (ThereAreStringsWithLength(length + 1))
+        concurrent.Mapped(m_strings_with_length_[length + 1],
+            [&concurrent, &searcher, &sample](const std::string &str)
+            {
+                searcher.SaveIfFitWithAdding(str);
+            }
+        ); 
+    
+    return searcher.GetSaved();
+    
+}
+
+bool TextForSearching::ThereAreStringsWithLength(size_t length)
+{
+    if (length <= m_strings_with_length_.size())
+        return !m_strings_with_length_[length].empty();
+    else 
+        return false;    
 }

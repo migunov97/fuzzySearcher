@@ -18,6 +18,7 @@ std::ifstream& getFile(const std::string &preliminary_file_name)
 
 int main(char argc, char **argv)
 {
+    using namespace fuzzySearcher;
     std::string preliminaryFileName;
     if (argc > 1) 
         preliminaryFileName = argv[1];

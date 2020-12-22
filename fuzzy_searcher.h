@@ -4,12 +4,16 @@
 #include <string>
 #include <list>
 
+namespace fuzzySearcher{
+
 using SuitableStrings = std::list<std::string>;
 
 class FuzzySearcher
 {
   public:
     FuzzySearcher(const std::string &sample);
+    
+    SuitableStrings GetSaved();
 
     void SaveIfFitWithMissing(const std::string &searching);
     void SaveIfFitWithChanging(const std::string &searching);
@@ -17,12 +21,14 @@ class FuzzySearcher
   
   private:
     bool FitWithMissing(const std::string &searching);
-    bool FitWithMissing(const std::string &searching);
-    bool FitWithMissing(const std::string &searching);
+    bool FitWithChanging(const std::string &searching);
+    bool FitWithAdding(const std::string &searching);
 
-    void SafeSave(const std::string &fiting);
+    void SaveThreadSafely(const std::string &fiting);
     
+    std::string m_sample_;
     SuitableStrings m_already_saved_;
 };
 
+}
 #endif

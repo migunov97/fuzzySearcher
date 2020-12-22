@@ -1,6 +1,7 @@
 #include "concurrent.h"
 
 
+using namespace fuzzySearcher;
 
 std::vector<TaskRange> Concurrent::BuildTaskRanges(std::vector<std::string> collection)
 {
@@ -27,12 +28,15 @@ void Concurrent::FunctionInRange(std::function<void(const std::string &)> mapFun
     return;
 }
 
-void Concurrent::Mapped(std::vector<std::string> vs, std::function<void(std::string &)> mapFunc)
+void Concurrent::Mapped(std::vector<std::string> vs, std::function<void(const std::string &)> mapFunc)
 {
     auto taskRanges = BuildTaskRanges(vs);
     std::vector<std::thread> threads(thread_count);
-    for (size_t i = 0; i < threads.size(); ++i) {
-        threads.push_back(std::thread(FunctionInRange(mapFunc, taskRanges[i])));
 
+    for (size_t i = 0; i < threads.size(); ++i) {
+        threads.push_back(std::thread(&FunctionInRange, mapFunc, taskRanges[i]));
+    }
+    for ( size_t i = 0; i < threads.size(); ++i) {
+        threads[i].join();
     }
 }

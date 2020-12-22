@@ -6,6 +6,7 @@
 #include <string>
 #include <thread>
 
+namespace fuzzySearcher{
 struct TaskRange
 {
     const std::vector<std::string> &array;
@@ -21,7 +22,7 @@ class Concurrent
   public:  
     Concurrent();
 
-    void Mapped(std::vector<std::string> vs, std::function<void(std::string &)> mapFunc);
+    void Mapped(std::vector<std::string> vs, std::function<void(const std::string &)> mapFunc);
 
   private:
     std::vector<TaskRange> BuildTaskRanges(std::vector<std::string> vs);
@@ -29,5 +30,5 @@ class Concurrent
     
     size_t thread_count;    
 };
-
+}
 #endif
