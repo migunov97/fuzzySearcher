@@ -15,11 +15,14 @@ using Text = std::vector<std::vector<std::string>>;
 class TextForSearching
 {
   public:
-    TextForSearching(std::ifstream &file);
-
+    TextForSearching(const std::string &file_name);
+    
     std::list<std::string> FuzzySearch(std::string &sample);
 
   private:
+    std::ifstream& GetFile(std::string file_name);
+    
+
     void Add(const std::string &line);
     bool ThereAreStringsWithLength(size_t length);
 
